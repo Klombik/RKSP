@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS food_entries (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    calories INTEGER NOT NULL,
+    proteins INTEGER NOT NULL,
+    fats INTEGER NOT NULL,
+    carbs INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
