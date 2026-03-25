@@ -1,6 +1,5 @@
 const { pool } = require('../config/db');
 
-// Получить все записи
 const getFoods = async (req, res) => {
   try {
     const result = await pool.query(
@@ -13,7 +12,6 @@ const getFoods = async (req, res) => {
   }
 };
 
-// Добавить запись
 const addFood = async (req, res) => {
   const { name, calories, proteins, fats, carbs } = req.body;
 

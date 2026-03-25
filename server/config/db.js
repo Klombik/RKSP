@@ -2,7 +2,11 @@ const { Pool } = require('pg');
 const config = require('./config');
 
 const pool = new Pool({
-  connectionString: config.databaseUrl,
+  host: config.dbHost,
+  port: config.dbPort,
+  database: config.dbName,
+  user: config.dbUser,
+  password: config.dbPassword,
   ssl: config.dbSsl ? { rejectUnauthorized: false } : false
 });
 

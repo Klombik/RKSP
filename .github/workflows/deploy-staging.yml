@@ -1,0 +1,39 @@
+name: Deploy Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy (for example: sha-abc1234)"
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare env
+        run: |
+          echo "APP_IMAGE=ghcr.io/${{ github.repository }}/server:${{ github.event.inputs.image_tag }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.event.inputs.image_tag }}" >> $GITHUB_ENV
+          echo "GIT_SHA=${{ github.sha }}" >> $GITHUB_ENV
+          echo "APP_ENV=staging" >> $GITHUB_ENV
+          echo "ENV_FILE=./deploy/staging.env" >> $GITHUB_ENV
+
+      - name: Docker login
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull and run fixed image
+        run: |
+          docker compose -f compose.release.yml pull
+          docker compose -f compose.release.yml up -d --scale app=3
+
+      - name: Show running services
+        run: docker compose -f compose.release.yml ps

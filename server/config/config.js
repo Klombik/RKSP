@@ -1,22 +1,29 @@
-const path = require('path');
-const dotenv = require('dotenv');
+const path = require("path");
 
-// Сначала пробуем загрузить .env для локальной разработки
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+function getEnv(name, fallback = undefined) {
+  return process.env[name] ?? fallback;
+}
 
-const toBool = (value, defaultValue = false) => {
-  if (value === undefined) return defaultValue;
-  return String(value).toLowerCase() === 'true';
+module.exports = {
+  port: Number(getEnv("PORT", 3000)),
+  nodeEnv: getEnv("NODE_ENV", "development"),
+  appEnv: getEnv("APP_ENV", "local"),
+
+  imageTag: getEnv("IMAGE_TAG", "dev"),
+  gitSha: getEnv("GIT_SHA", "unknown"),
+
+  mongoUri: getEnv("MONGO_URI", "mongodb://localhost:27017/calorie_tracker"),
+  redisUrl: getEnv("REDIS_URL", "redis://localhost:6379"),
+
+  sessionSecret: getEnv("SESSION_SECRET", "change-me"),
+  sessionName: getEnv("SESSION_NAME", "calorie.sid"),
+  sessionTtlSeconds: Number(getEnv("SESSION_TTL_SECONDS", 60 * 60 * 24)),
+
+  clientOrigin: getEnv("CLIENT_ORIGIN", "http://localhost:5173"),
+
+  instanceId:
+    getEnv("HOSTNAME") ||
+    `${process.pid}-${Math.random().toString(36).slice(2, 8)}`,
+
+  rootDir: path.resolve(__dirname)
 };
-
-const config = {
-  port: process.env.PORT || 5000,
-  nodeEnv: process.env.NODE_ENV || 'development',
-  appHost: process.env.APP_HOST || 'localhost',
-  databaseUrl:
-    process.env.DATABASE_URL ||
-    'postgresql://postgres:postgres@localhost:5432/food_diary',
-  dbSsl: toBool(process.env.DB_SSL, false)
-};
-
-module.exports = config;
