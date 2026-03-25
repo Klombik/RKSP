@@ -1,0 +1,18 @@
+{
+  "name": "calorie-tracker-server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "connect-redis": "^9.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "express-session": "^1.19.0",
+    "mongodb": "^6.17.0",
+    "redis": "^5.8.2"
+  }
+}
